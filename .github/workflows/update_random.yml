@@ -3,7 +3,10 @@ name: Update Random Number
 on:
   schedule:
     - cron: '0 * * * *'  # প্রতি ঘন্টায় রান করবে
-  workflow_dispatch:     # ম্যানুয়াল রানের অপশন
+  workflow_dispatch:
+
+permissions:  # নতুন যোগ করা
+  contents: write  # রিপোজিটরিতে লিখার পারমিশন
 
 jobs:
   update-random:
@@ -12,6 +15,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # সম্পূর্ণ Git হিস্ট্রি ফেচ করে
 
       - name: Generate random number
         run: |
