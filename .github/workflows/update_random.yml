@@ -1,0 +1,31 @@
+name: Update Random Number
+
+on:
+  schedule:
+    - cron: '0 * * * *'  # প্রতি ঘন্টায় রান করবে
+  workflow_dispatch:     # ম্যানুয়াল রানের অপশন
+
+jobs:
+  update-random:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Generate random number
+        run: |
+          RANDOM_NUM=$(( $RANDOM % 10000 + 1 ))
+          echo '{
+            "random_number": '$RANDOM_NUM',
+            "last_updated": "'$(date -u +"%Y-%m-%dT%H:%M:%SZ")'",
+            "author": "sultanarabi161"
+          }' > random_data.json
+
+      - name: Commit and push
+        run: |
+          git config --global user.name "GitHub Action"
+          git config --global user.email "action@github.com"
+          git add random_data.json
+          git commit -m "Auto-update: Random number $(date +'%Y-%m-%d %H:%M:%S')"
+          git push
